@@ -1,14 +1,16 @@
 **jessicaharby**
 
 - Prerequisites
+```
 node
 sass
 nvm
+```
 
 **Running the app**
 
-Use npm version 8
-`nvm use 8`
+Use npm version 11
+`nvm use 11`
 
 `npm run start`
 
