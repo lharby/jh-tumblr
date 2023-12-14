@@ -1,0 +1,90 @@
+/*
+Luke Harby
+slackwise LTD
+https://slackwise.org.uk
+2012 - present
+*/
+
+@mixin defaultFont() {
+    font-size: 2rem;
+
+    @include mobile(0, $mobile-size) {
+        font-size: 1.75rem;
+    }
+}
+
+@mixin hover($type, $speed, $ease) {
+    transition: $type $speed $ease;
+}
+
+@mixin desktop($width) {
+    @media screen and (min-width: $width + 1) {
+        @content;
+    }
+}
+
+@mixin tablet($width) {
+    @media screen and (min-width: 1px) and (max-width: $width) {
+        @content;
+    }
+}
+
+@mixin mobile($min, $max) {
+    @media screen and (min-width: $min) and (max-width: $max - 1) {
+        @content;
+    }
+}
+
+@mixin scrollBar {
+    scrollbar-color: $colour__black $colour__pale-grey;
+    &::-webkit-scrollbar-track {
+        background-color: $colour__pale-grey;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $colour__black;
+        outline: none;
+    }
+}
+
+@mixin scrollBarColour {
+    scrollbar-color: #{var(--selection-background)} $colour__pale-grey;
+    &::-webkit-scrollbar-thumb {
+        background-color: #{var(--selection-background)};
+    }
+}
+
+@mixin no-outline {
+    &,
+    &:active,
+    &:focus {
+        outline: none;
+    }
+}
+
+@mixin outline {
+    &:focus {
+        outline: thin dotted $colour__dark-grey;
+    }
+}
+
+@mixin emptyContent {
+    &:empty {
+        display: none;
+    }
+}
+
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} {
+        @content;
+    }
+    @-moz-keyframes #{$name} {
+        @content;
+    }
+    @-ms-keyframes #{$name} {
+        @content;
+    }
+    @keyframes #{$name} {
+        @content;
+    }
+}

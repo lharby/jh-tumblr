@@ -1,0 +1,19 @@
+{
+  "extends": [
+    'stylelint-config-standard',
+    'stylelint-config-sass-guidelines'
+  ],
+  "rules": {
+    declaration-empty-line-before: null,
+    selector-pseudo-element-colon-notation: 'single',
+    at-rule-empty-line-before: null,
+    rule-empty-line-before: null,
+    selector-max-id: 2,
+    max-nesting-depth: 3,
+    indentation: 4,
+    at-rule-no-unknown: null
+  },
+  ignore: [
+    'max-nesting-depth'
+  ]
+}

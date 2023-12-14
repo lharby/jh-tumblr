@@ -1,0 +1,86 @@
+/// Set a default for "$screensizes", which will be overridden by the following import statement.
+/// @group mixins and tools
+/// @type map
+$screensizes: ();
+
+// Import screen sizes from the configuration file. This is possible through the use of
+// a JSON importer found here: https://github.com/Updater/node-sass-json-importer
+// @import "../site-settings.json";
+
+@import 'variables';
+  
+//
+// Media Queries
+// --------------------------------------------------
+
+/// @group mixins and tools
+/// @type map
+$widthBreakpoints: ();
+
+/// @group mixins and tools
+/// @type map
+$heightBreakpoints: ();
+
+// The "screensizes" variable is defined in "site-settings.json", which is imported at the top of this
+// file - any property in that file is imported as "raw" variables for use in SCSS. If you want to
+// get a specific size from it, for use in a width (or whatever), do this:
+//
+//  width: map-get($screensizes, md);
+//
+// That will give you the associated pixel width as defined in the configuration file.
+
+// We'll start by getting all the keys set in the screen sizes.
+$screensizeKeys: (map-keys($screensizes));
+
+// Create breakpoints for every given screen size.
+@for $i from 1 through length($screensizeKeys) {
+    // First, get the name of the current breakpoint (ie. "md")
+    $currentScreensizeName: nth($screensizeKeys, $i);
+
+    // Then, get the screen size associated with it. (ie. "992px")
+    $currentScreensize: map-get($screensizes, $currentScreensizeName);
+
+    // Define a new breakpoint map that we can merge into our "master" breakpoint map.
+    $newWidthBreakpoint: (
+        "#{$currentScreensizeName}": (
+            min-width: #{$currentScreensize}
+        )
+    );
+    $newHeightBreakpoint: (
+        "#{$currentScreensizeName}": (
+            min-height: #{$currentScreensize}
+        )
+    );
+
+    // ... and then merge.
+    $widthBreakpoints: map-merge($widthBreakpoints, $newWidthBreakpoint);
+    $heightBreakpoints: map-merge($heightBreakpoints, $newHeightBreakpoint);
+
+    // You can now use this breakpoint by writing: @include mq(md) { your-code: here; }
+    // The names of all the breakpoints can be found in the configuration file, and you can add and change them
+    // as much as you'd like. "Unused" breakpoints will not make your CSS larger.
+
+    // If this is not the first entry, get the name of the previous entry, subtract one pixel from the current size,
+    // and set that as a "max-width" media query. For example, if we just made a "sm >= 768px" breakpoint, this will
+    // create an "xs-max <= 767px" breakpoint.
+    @if $i > 1 {
+        $lastScreensize: nth($screensizeKeys, $i - 1);
+        $newMaxBreakpointWidth: (
+            "#{$lastScreensize}-max": (
+                max-width: #{$currentScreensize - 1px}
+            )
+        );
+        $newMaxBreakpointHeight: (
+            "#{$lastScreensize}-max": (
+                max-height: #{$currentScreensize - 1px}
+            )
+        );
+        $widthBreakpoints: map-merge($widthBreakpoints, $newMaxBreakpointWidth);
+        $heightBreakpoints: map-merge(
+            $heightBreakpoints,
+            $newMaxBreakpointHeight
+        );
+
+        // You can now use this breakpoint by writing: @include mq(sm-max) { your-code: here; }
+    }
+}

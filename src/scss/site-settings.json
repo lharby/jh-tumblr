@@ -1,0 +1,12 @@
+{
+  "screensizes": {
+    "xxs": "1px",
+    "xs": "480px",
+    "sm": "768px",
+    "md": "992px",
+    "lg": "1220px",
+    "xl": "1540px",
+    "xxl": "1840px",
+    "xxxl": "1920px"
+  }
+}

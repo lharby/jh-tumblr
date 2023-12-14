@@ -1,6 +1,7 @@
 import styles from './scss/main.scss';
-import { logger } from './js/logger';
+import { getPosts } from './js/getPosts';
 
-document.querySelector('html').classList.remove('no-js');
-
-logger();
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('html').classList.remove('no-js');
+    getPosts();
+});

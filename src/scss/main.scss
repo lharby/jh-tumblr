@@ -1,2 +1,12 @@
-@import 	'partials/normalize';
+/* functions */
+@import 'functions/variables';
+@import 'functions/screensizes';
+@import 'functions/mixins';
 
+/* partials */
+@import 'partials/normalize';
+@import 'partials/responsive';
+@import 'partials/layout';
+
+/* components */
+@import 'components/*.scss';

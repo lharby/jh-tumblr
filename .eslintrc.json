@@ -1,0 +1,31 @@
+{
+    "extends": "eslint:recommended",
+    "plugins": [
+        "prettier"
+    ],
+    "env": {
+        "jest": true,
+        "browser": true,
+        "es6": true,
+        "node": true,
+        "jquery": true,
+        "amd": true
+    },
+    "parserOptions": {
+        "allowImportExportEverywhere": true,
+        "sourceType": "module"
+    },
+    "globals": {
+        "sw": true,
+        "Stripe": true,
+        "StripeCheckout": true,
+        "grecaptcha": "readonly"
+    },
+    "rules": {
+        "prettier/prettier": ["error", {"singleQuote": true}],
+        "import/no-unresolved": 0,
+        "import/no-extraneous-dependencies": 0,
+        "global-require": 0,
+        "no-useless-escape": 0
+    }
+}

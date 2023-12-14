@@ -1,0 +1,113 @@
+/*
+Luke Harby
+slackwise LTD
+https://slackwise.org.uk
+2012 - present
+*/
+
+.desktop-hidden {
+    display: none;
+}
+
+.desktop-visible {
+    display: block;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.el {
+    display: flex;
+    flex-direction: column;
+
+    &-1 {
+        flex: 0 0 8.33333%;
+        max-width: 8.33333%;
+    }
+
+    &-2 {
+        flex: 0 0 16.66667%;
+        max-width: 16.66667%;
+    }
+
+    &-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    &-4 {
+        flex: 0 0 33.33333%;
+        max-width: 33.33333%;
+    }
+
+    &-5 {
+        flex: 0 0 41.66667%;
+        max-width: 41.66667%;
+    }
+
+    &-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    &-7 {
+        flex: 0 0 58.33333%;
+        max-width: 58.33333%;
+    }
+
+    &-8 {
+        flex: 0 0 66.66667%;
+        max-width: 66.66667%;
+    }
+
+    &-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+
+    &-10 {
+        flex: 0 0 83.33333%;
+        max-width: 83.33333%;
+    }
+
+    &-11 {
+        flex: 0 0 91.66667%;
+        max-width: 91.66667%;
+    }
+
+    &-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    img {
+        width: 100% !important;
+    }
+}
+
+@include tablet($tablet-size) {
+    .row {
+        column-gap: 0;
+        flex-flow: row wrap;
+    }
+
+    [class^='el'] {
+        display: flex;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@include mobile(0, $mobile-size) {
+    .mobile-hidden,
+    .mobile-visible {
+        display: block;
+    }
+
+    .desktop-hidden,
+    .desktop-visible {
+        display: none;
+    }
+}
