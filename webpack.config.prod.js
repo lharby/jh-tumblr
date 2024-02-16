@@ -4,16 +4,13 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const globImporter = require('node-sass-glob-importer');
 const srcFolder = './src/';
-const outputFolder = 'app/';
 
-const configFE = {
+const configProdFE = {
     entry: {
-        app: srcFolder + 'app.js',
         'app.min': srcFolder + 'app.js'
     },
-    target: 'web',
     output: {
-        path: path.resolve(__dirname, outputFolder + 'js/'),
+        path: path.resolve(__dirname, 'dist', 'js'),
         filename: '[name].js'
     },
     plugins: [
@@ -64,10 +61,7 @@ const configFE = {
             }),
             new OptimizeCSSAssetsPlugin({})
         ]
-    },
-    devtool: 'source-map',
-    watch: true,
-    mode: 'none'
+    }
 };
 
-module.exports = [configFE];
+module.exports = [configProdFE];
