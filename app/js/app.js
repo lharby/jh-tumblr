@@ -94,12 +94,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_main_scss__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _js_getPosts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 /* harmony import */ var _js_customElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+/* harmony import */ var _js_pageDirectory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+
 
 
 
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('html').classList.remove('no-js');
   Object(_js_customElement__WEBPACK_IMPORTED_MODULE_2__["createCustomElement"])();
+  Object(_js_pageDirectory__WEBPACK_IMPORTED_MODULE_3__["default"])();
   Object(_js_getPosts__WEBPACK_IMPORTED_MODULE_1__["getPosts"])();
 });
 
@@ -141,12 +144,11 @@ var getPosts = function getPosts() {
     return response.json();
   }).then(function (response) {
     if (response) {
-      console.log("total posts: ".concat(response.response.total_posts));
       var posts = response.response.posts;
       if (postWrapper) {
         posts.forEach(function (item) {
           var li = document.createElement('li');
-          li.classList.add('el', 'el-3');
+          li.classList.add('el', 'el-2');
           li.innerHTML = item.body;
           postWrapper.appendChild(li);
         });
@@ -157,11 +159,9 @@ var getPosts = function getPosts() {
         });
       });
       arrTags = _toConsumableArray(new Set(tags.sort()));
-      console.log(arrTags);
       if (tagWrapper) {
         arrTags.forEach(function (item) {
           var itemHREF = item.replaceAll(' ', '+');
-          console.log(item);
           var template = "<li><a href=".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].blogURL, "/tagged/").concat(itemHREF, " target=\"_blank\">").concat(item, "</li>");
           tagWrapper.innerHTML += template;
         });
@@ -181,9 +181,12 @@ __webpack_require__.r(__webpack_exports__);
 var global = {
   protocol: document.location.protocol,
   apiBaseURL: 'api.tumblr.com/v2/blog/',
-  apiBlog: 'jh-test.tumblr.com',
+  // apiBlog: 'jh-test.tumblr.com',
+  apiBlog: 'jessicaharbydotcom.tumblr.com',
   oAuthConsumerKey: atob('MW5KZmtyMG9XZzBzTmxHS0ttNXB4NG43TVBETWFZb2x1R0NwbkZuRk1WejlJbHlIUFc='),
-  blogURL: 'https://jh-test.tumblr.com/'
+  blogURL: 'https://jh-test.tumblr.com/',
+  docLocation: document.location,
+  DOC: document.querySelector('html')
 };
 
 
@@ -253,6 +256,29 @@ var createCustomElement = function createCustomElement() {
   }( /*#__PURE__*/_wrapNativeSuper(HTMLElement)));
 };
 
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+
+var pageDirectory = function pageDirectory() {
+  var dir = _global__WEBPACK_IMPORTED_MODULE_0__["global"].docLocation.pathname.split('/');
+  var primaryDir = dir[1];
+  var secondaryDir = dir[2];
+  if (!primaryDir) {
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add('index');
+  } else if (secondaryDir) {
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(primaryDir);
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(secondaryDir);
+  } else if (primaryDir) {
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(primaryDir);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (pageDirectory);
 
 /***/ })
 /******/ ]);

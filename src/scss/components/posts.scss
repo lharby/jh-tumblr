@@ -1,7 +1,22 @@
-.posts {
+html.posts {
     video,
     audio,
     iframe {
         width: 100%;
+    }
+
+    .posts {
+        margin: 4rem 0;
+        padding: 0 1rem;
+
+        li {
+            background-color: $colour__grey--palest;
+        }
+    }
+}
+
+@include mobile(0, $mobile-size) {
+    ul.posts {
+        background-color: pink;
     }
 }
