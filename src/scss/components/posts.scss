@@ -14,9 +14,3 @@ html.posts {
         }
     }
 }
-
-@include mobile(0, $mobile-size) {
-    ul.posts {
-        background-color: pink;
-    }
-}

@@ -10,7 +10,7 @@ const configProdFE = {
         'app.min': srcFolder + 'app.js'
     },
     output: {
-        path: path.resolve(__dirname, 'dist', 'js'),
+        path: path.resolve(__dirname, 'public/app', 'js'),
         filename: '[name].js'
     },
     plugins: [

@@ -4,7 +4,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const globImporter = require('node-sass-glob-importer');
 const srcFolder = './src/';
-const outputFolder = 'app/';
+const outputFolder = 'public/app/';
 
 const configFE = {
     entry: {
