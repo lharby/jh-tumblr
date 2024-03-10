@@ -9,8 +9,32 @@ html.posts {
         margin: 4rem 0;
         padding: 0 1rem;
 
+        @include tablet($tablet-size) {
+            padding: 0;
+        }
+
         li {
+            position: relative;
             background-color: $colour__grey--palest;
+            height: 200px;
+            overflow: hidden;
+
+            @include tablet($tablet-size) {
+                height: unset;
+                overflow: unset;
+            }
+            
+            img {
+                object-fit: cover;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+
+                @include tablet($tablet-size) {
+                    position: unset;
+                }
+            }
         }
     }
 }
