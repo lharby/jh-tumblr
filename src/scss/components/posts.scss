@@ -6,13 +6,6 @@ html.posts {
     }
 
     .posts {
-        margin: 4rem 0;
-        padding: 0 1rem;
-
-        @include tablet($tablet-size) {
-            padding: 0;
-        }
-
         li {
             position: relative;
             background-color: $colour__grey--palest;
@@ -22,6 +15,21 @@ html.posts {
             @include tablet($tablet-size) {
                 height: unset;
                 overflow: unset;
+            }
+
+            > a {
+                &:hover img {
+                    @include hover($animation__type-default, $animation__speed-fast, $animation__ease-default);
+                    opacity: 0.2;
+
+                    @include tablet($tablet-size) {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            a {
+                color: $colour__black;
             }
             
             img {

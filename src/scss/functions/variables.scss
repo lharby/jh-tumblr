@@ -13,3 +13,10 @@ $screensizes: (
 $mobile-size: 740px !default;
 $tablet-size: 900px !default;
 $desktop-size: 1024px !default;
+
+// animations
+$animation__type-default: all;
+$animation__speed-fast: 100ms;
+$animation__speed-default: 400ms;
+$animation__speed-slow: 1000ms;
+$animation__ease-default: ease-in;

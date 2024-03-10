@@ -127,8 +127,9 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
-var postWrapper = document.querySelector('.posts');
-var tagWrapper = document.querySelector('.tags');
+var postWrapper = document.querySelector('ul.posts');
+var tagWrapper = document.querySelector('ul.tags');
+var dataWrapper = document.querySelector('pre.data');
 var tags = [];
 var arrTags = [];
 var getPosts = function getPosts() {
@@ -147,10 +148,9 @@ var getPosts = function getPosts() {
       var posts = response.response.posts;
       if (postWrapper) {
         posts.forEach(function (item) {
-          var li = document.createElement('li');
-          li.classList.add('el', 'el-2');
-          li.innerHTML = item.body;
-          postWrapper.appendChild(li);
+          var href = item.post_url;
+          var template = "<li class=\"el el-2\"><a href=".concat(href, " target=\"_blank\">").concat(item.body, "</a></li>");
+          postWrapper.innerHTML += template;
         });
       }
       posts.map(function (item) {
@@ -165,6 +165,9 @@ var getPosts = function getPosts() {
           var template = "<li><a href=".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].blogURL, "/tagged/").concat(itemHREF, " target=\"_blank\">").concat(item, "</li>");
           tagWrapper.innerHTML += template;
         });
+      }
+      if (dataWrapper) {
+        dataWrapper.textContent = JSON.stringify(posts, null, 4);
       }
     }
   });

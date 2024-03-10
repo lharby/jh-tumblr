@@ -9,8 +9,27 @@ body {
     font-size: 0.9rem;
 }
 
+a,
+a:hover {
+    @include hover($animation__type-default, $animation__speed-default, $animation__ease-default);
+    color: $colour__black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
 ul {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+.page-wrapper {
+    margin: 4rem 0;
+    padding: 0 1rem;
+
+    @include tablet($tablet-size) {
+        padding: 0;
+    }
 }

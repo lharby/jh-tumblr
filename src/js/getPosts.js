@@ -1,6 +1,7 @@
 import { global } from './global';
-const postWrapper = document.querySelector('.posts');
-const tagWrapper = document.querySelector('.tags');
+const postWrapper = document.querySelector('ul.posts');
+const tagWrapper = document.querySelector('ul.tags');
+const dataWrapper = document.querySelector('pre.data');
 let tags = [];
 let arrTags = [];
 
@@ -20,10 +21,9 @@ const getPosts = () => {
                 const posts = response.response.posts;
                 if (postWrapper) {
                     posts.forEach((item) => {
-                        const li = document.createElement('li');
-                        li.classList.add('el', 'el-2');
-                        li.innerHTML = item.body;
-                        postWrapper.appendChild(li);
+                        const href = item.post_url;
+                        const template = `<li class="el el-2"><a href=${href} target="_blank">${item.body}</a></li>`;
+                        postWrapper.innerHTML += template;
                     });
                 }
                 posts.map((item) => item.tags.map((tag) => tags.push(tag.toLowerCase())));
@@ -34,6 +34,9 @@ const getPosts = () => {
                         const template = `<li><a href=${global.blogURL}/tagged/${itemHREF} target="_blank">${item}</li>`;
                         tagWrapper.innerHTML += template;
                     });
+                }
+                if (dataWrapper) {
+                    dataWrapper.textContent = JSON.stringify(posts, null, 4);
                 }
             }
         });
