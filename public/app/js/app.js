@@ -132,44 +132,71 @@ var tagWrapper = document.querySelector('ul.tags');
 var dataWrapper = document.querySelector('pre.data');
 var tags = [];
 var arrTags = [];
+var posts;
 var getPosts = function getPosts() {
-  var url = new URL("https://".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBaseURL).concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBlog, "/posts?"));
-  url.searchParams.set('api_key', _global__WEBPACK_IMPORTED_MODULE_0__["global"].oAuthConsumerKey);
+  var limit = 20;
   var options = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
   };
-  fetch(url, options).then(function (response) {
-    return response.json();
-  }).then(function (response) {
-    if (response) {
-      var posts = response.response.posts;
-      if (postWrapper) {
-        posts.forEach(function (item) {
-          var href = item.post_url;
-          var template = "<li class=\"el el-2\"><a href=".concat(href, " target=\"_blank\">").concat(item.body, "</a></li>");
-          postWrapper.innerHTML += template;
+  var retrieveMore = function retrieveMore(offset) {
+    var url = new URL("https://".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBaseURL).concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBlog, "/posts?offset=").concat(offset));
+    url.searchParams.set('api_key', _global__WEBPACK_IMPORTED_MODULE_0__["global"].oAuthConsumerKey);
+    fetch(url, options).then(function (response) {
+      return response.json();
+    }).then(function (response) {
+      if (response) {
+        var postLength = response.response.posts.length;
+        var totalPosts = response.response.total_posts;
+        posts = response.response.posts;
+        if (postWrapper) {
+          posts.forEach(function (item) {
+            var href = item.post_url;
+            var template = "<li class=\"el el-2\"><a href=".concat(href, " target=\"_blank\">").concat(item.body, "</a></li>");
+            postWrapper.insertAdjacentHTML('beforeend', template);
+          });
+        }
+        if (dataWrapper) {
+          dataWrapper.textContent = JSON.stringify(posts[0], null, 4);
+          return;
+        }
+
+        /*
+        Lets keep pushing all of the tags to the tag array
+        */
+        posts.map(function (item) {
+          return item.tags.map(function (tag) {
+            return tags.push(tag.toLowerCase());
+          });
         });
+
+        /* 
+        As long as our total no of posts is greater than our counter keep iterating over the posts
+        */
+        if (totalPosts >= offset && postLength !== 0) {
+          retrieveMore(offset + limit);
+        }
+        /* 
+        Once our counter is larger or the same size as
+        the total number of posts, 
+        lets output the array of unique tags. 
+        */
+        if (offset >= totalPosts && tagWrapper) {
+          arrTags = _toConsumableArray(new Set(tags.sort()));
+          setTags();
+        }
       }
-      posts.map(function (item) {
-        return item.tags.map(function (tag) {
-          return tags.push(tag.toLowerCase());
-        });
-      });
-      arrTags = _toConsumableArray(new Set(tags.sort()));
-      if (tagWrapper) {
-        arrTags.forEach(function (item) {
-          var itemHREF = item.replaceAll(' ', '+');
-          var template = "<li><a href=".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].blogURL, "/tagged/").concat(itemHREF, " target=\"_blank\">").concat(item, "</li>");
-          tagWrapper.innerHTML += template;
-        });
-      }
-      if (dataWrapper) {
-        dataWrapper.textContent = JSON.stringify(posts, null, 4);
-      }
-    }
+    });
+  };
+  retrieveMore(0);
+};
+var setTags = function setTags() {
+  arrTags.forEach(function (item) {
+    var itemHREF = item.replaceAll(' ', '+');
+    var template = "<li><a href=".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].blogURL, "/tagged/").concat(itemHREF, " target=\"_blank\">").concat(item, "</li>");
+    tagWrapper.innerHTML += template;
   });
 };
 
