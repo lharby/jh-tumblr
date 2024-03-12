@@ -2,6 +2,7 @@ import { global } from './global';
 const postWrapper = document.querySelector('ul.posts');
 const tagWrapper = document.querySelector('ul.tags');
 const dataWrapper = document.querySelector('pre.data');
+const loadingClass = 'loading';
 let tags = [];
 let arrTags = [];
 let posts;
@@ -17,6 +18,7 @@ const getPosts = () => {
     const retrieveMore = (offset) => {
         const url = new URL(`https://${global.apiBaseURL}${global.apiBlog}/posts?offset=${offset}`);
         url.searchParams.set('api_key', global.oAuthConsumerKey);
+        global.DOC.classList.add(loadingClass);
         fetch(url, options)
             .then((response) => response.json())
             .then((response) => {
@@ -27,7 +29,7 @@ const getPosts = () => {
                     if (postWrapper) {
                         posts.forEach((item) => {
                             const href = item.post_url;
-                            const template = `<li class="el el-2"><a href=${href} target="_blank">${item.body}</a></li>`;
+                            const template = `<li class="el el-2"><a href=${href} class="trigger" target="_blank">${item.body}</a></li>`;
                             postWrapper.insertAdjacentHTML('beforeend', template);
                         });
                     }
@@ -58,6 +60,13 @@ const getPosts = () => {
                         setTags();
                     }
                 }
+            })
+            .catch((error) => {
+                global.DOC.classList.remove(loadingClass);
+                console.error('Error:', error.message);
+            })
+            .finally(() => {
+                global.DOC.classList.remove(loadingClass);
             });
     };
     retrieveMore(0);

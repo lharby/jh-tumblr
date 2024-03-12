@@ -130,6 +130,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 var postWrapper = document.querySelector('ul.posts');
 var tagWrapper = document.querySelector('ul.tags');
 var dataWrapper = document.querySelector('pre.data');
+var loadingClass = 'loading';
 var tags = [];
 var arrTags = [];
 var posts;
@@ -144,6 +145,7 @@ var getPosts = function getPosts() {
   var retrieveMore = function retrieveMore(offset) {
     var url = new URL("https://".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBaseURL).concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBlog, "/posts?offset=").concat(offset));
     url.searchParams.set('api_key', _global__WEBPACK_IMPORTED_MODULE_0__["global"].oAuthConsumerKey);
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(loadingClass);
     fetch(url, options).then(function (response) {
       return response.json();
     }).then(function (response) {
@@ -154,7 +156,7 @@ var getPosts = function getPosts() {
         if (postWrapper) {
           posts.forEach(function (item) {
             var href = item.post_url;
-            var template = "<li class=\"el el-2\"><a href=".concat(href, " target=\"_blank\">").concat(item.body, "</a></li>");
+            var template = "<li class=\"el el-2\"><a href=".concat(href, " class=\"trigger\" target=\"_blank\">").concat(item.body, "</a></li>");
             postWrapper.insertAdjacentHTML('beforeend', template);
           });
         }
@@ -188,6 +190,11 @@ var getPosts = function getPosts() {
           setTags();
         }
       }
+    })["catch"](function (error) {
+      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
+      console.error('Error:', error.message);
+    })["finally"](function () {
+      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
     });
   };
   retrieveMore(0);

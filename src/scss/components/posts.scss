@@ -17,17 +17,6 @@ html.posts {
                 overflow: unset;
             }
 
-            > a {
-                &:hover img {
-                    @include hover($animation__type-default, $animation__speed-fast, $animation__ease-default);
-                    opacity: 0.2;
-
-                    @include tablet($tablet-size) {
-                        opacity: 1;
-                    }
-                }
-            }
-
             a {
                 color: $colour__black;
             }
