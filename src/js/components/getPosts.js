@@ -1,11 +1,14 @@
-import { global } from './global';
+import { global } from '../global';
+import { replaceSpaces, replaceUnderscores } from '../utils/utils';
 const postWrapper = document.querySelector('ul.posts');
 const tagWrapper = document.querySelector('ul.tags');
 const dataWrapper = document.querySelector('pre.data');
 const loadingClass = 'loading';
 let tags = [];
 let arrTags = [];
+let allPosts = [];
 let posts;
+let resultFinal;
 
 const getPosts = () => {
     let limit = 20;
@@ -28,8 +31,9 @@ const getPosts = () => {
                     posts = response.response.posts;
                     if (postWrapper) {
                         posts.forEach((item) => {
-                            const href = item.post_url;
-                            const template = `<li class="el el-2"><a href=${href} class="trigger" target="_blank">${item.body}</a></li>`;
+                            allPosts.push(item);
+                            const tag = replaceSpaces(item.tags[0]);
+                            const template = `<li class="el el-2"><a href=${tag} class="post-trigger">${item.body}</a></li>`;
                             postWrapper.insertAdjacentHTML('beforeend', template);
                         });
                     }
@@ -55,9 +59,13 @@ const getPosts = () => {
                     the total number of posts, 
                     lets output the array of unique tags. 
                     */
-                    if (offset >= totalPosts && tagWrapper) {
+                    if (offset >= totalPosts) {
                         arrTags = [...new Set(tags.sort())];
-                        setTags();
+                        setAllPostsToObjects();
+                        attachClickEvent();
+                        if (tagWrapper) {
+                            setTags();
+                        }
                     }
                 }
             })
@@ -77,6 +85,41 @@ const setTags = () => {
         const itemHREF = item.replaceAll(' ', '+');
         const template = `<li><a href=${global.blogURL}/tagged/${itemHREF} target="_blank">${item}</li>`;
         tagWrapper.innerHTML += template;
+    });
+};
+
+const setAllPostsToObjects = () => {
+    const newSets = arrTags.map((item) => {
+        return allPosts.filter((postItem) => {
+            return postItem.tags[0] === item;
+        });
+    });
+
+    resultFinal = arrTags.map((key, i) => {
+        key = replaceSpaces(key);
+        return { name: key, value: newSets[i] };
+    });
+};
+
+const attachClickEvent = () => {
+    const modal = document.querySelector('.modal__list');
+    document.addEventListener('click', (event) => {
+        event.preventDefault();
+        const current = event.target.closest('.post-trigger');
+        if (current) {
+            return resultFinal.forEach((item, index) => {
+                const itemName = replaceUnderscores(item.name);
+                const targetName = replaceUnderscores(current.getAttribute('href'));
+                const setName = resultFinal[index].value;
+                if (itemName === targetName) {
+                    console.log(resultFinal[index].name, setName);
+                    setName.forEach((item) => {
+                        const template = `<li class="el el-3">${item.body}</li>`;
+                        modal.insertAdjacentHTML('beforeend', template);
+                    });
+                }
+            });
+        }
     });
 };
 

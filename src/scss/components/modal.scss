@@ -1,0 +1,33 @@
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    background-color: transparentize($color: $colour__black, $amount: 0.1);
+
+    &__open {
+        display: block;
+    }
+
+    &__close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        border: none;
+        font-size: 2rem;
+        background-color: transparent;
+        color: $colour__white;
+        font-family: monospace;
+    }
+
+    &__list {
+        display: flex;
+    }
+
+    img {
+        width: 100%;
+    }
+}

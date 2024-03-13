@@ -92,18 +92,21 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_main_scss__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _js_getPosts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _js_customElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
-/* harmony import */ var _js_pageDirectory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _js_utils_customElement__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _js_components_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
+/* harmony import */ var _js_components_pageDirectory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _js_components_getPosts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
+
 
 
 
 
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('html').classList.remove('no-js');
-  Object(_js_customElement__WEBPACK_IMPORTED_MODULE_2__["createCustomElement"])();
-  Object(_js_pageDirectory__WEBPACK_IMPORTED_MODULE_3__["default"])();
-  Object(_js_getPosts__WEBPACK_IMPORTED_MODULE_1__["getPosts"])();
+  Object(_js_utils_customElement__WEBPACK_IMPORTED_MODULE_1__["createCustomElement"])();
+  Object(_js_components_modal__WEBPACK_IMPORTED_MODULE_2__["modal"])();
+  Object(_js_components_pageDirectory__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  Object(_js_components_getPosts__WEBPACK_IMPORTED_MODULE_4__["getPosts"])();
 });
 
 /***/ }),
@@ -114,120 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
-/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-
-var postWrapper = document.querySelector('ul.posts');
-var tagWrapper = document.querySelector('ul.tags');
-var dataWrapper = document.querySelector('pre.data');
-var loadingClass = 'loading';
-var tags = [];
-var arrTags = [];
-var posts;
-var getPosts = function getPosts() {
-  var limit = 20;
-  var options = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-  var retrieveMore = function retrieveMore(offset) {
-    var url = new URL("https://".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBaseURL).concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBlog, "/posts?offset=").concat(offset));
-    url.searchParams.set('api_key', _global__WEBPACK_IMPORTED_MODULE_0__["global"].oAuthConsumerKey);
-    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(loadingClass);
-    fetch(url, options).then(function (response) {
-      return response.json();
-    }).then(function (response) {
-      if (response) {
-        var postLength = response.response.posts.length;
-        var totalPosts = response.response.total_posts;
-        posts = response.response.posts;
-        if (postWrapper) {
-          posts.forEach(function (item) {
-            var href = item.post_url;
-            var template = "<li class=\"el el-2\"><a href=".concat(href, " class=\"trigger\" target=\"_blank\">").concat(item.body, "</a></li>");
-            postWrapper.insertAdjacentHTML('beforeend', template);
-          });
-        }
-        if (dataWrapper) {
-          dataWrapper.textContent = JSON.stringify(posts[0], null, 4);
-          return;
-        }
-
-        /*
-        Lets keep pushing all of the tags to the tag array
-        */
-        posts.map(function (item) {
-          return item.tags.map(function (tag) {
-            return tags.push(tag.toLowerCase());
-          });
-        });
-
-        /* 
-        As long as our total no of posts is greater than our counter keep iterating over the posts
-        */
-        if (totalPosts >= offset && postLength !== 0) {
-          retrieveMore(offset + limit);
-        }
-        /* 
-        Once our counter is larger or the same size as
-        the total number of posts, 
-        lets output the array of unique tags. 
-        */
-        if (offset >= totalPosts && tagWrapper) {
-          arrTags = _toConsumableArray(new Set(tags.sort()));
-          setTags();
-        }
-      }
-    })["catch"](function (error) {
-      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
-      console.error('Error:', error.message);
-    })["finally"](function () {
-      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
-    });
-  };
-  retrieveMore(0);
-};
-var setTags = function setTags() {
-  arrTags.forEach(function (item) {
-    var itemHREF = item.replaceAll(' ', '+');
-    var template = "<li><a href=".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].blogURL, "/tagged/").concat(itemHREF, " target=\"_blank\">").concat(item, "</li>");
-    tagWrapper.innerHTML += template;
-  });
-};
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "global", function() { return global; });
-var global = {
-  protocol: document.location.protocol,
-  apiBaseURL: 'api.tumblr.com/v2/blog/',
-  apiBlog: 'jessicaharbydotcom.tumblr.com',
-  oAuthConsumerKey: atob('MW5KZmtyMG9XZzBzTmxHS0ttNXB4NG43TVBETWFZb2x1R0NwbkZuRk1WejlJbHlIUFc='),
-  blogURL: 'https://jessicaharbydotcom.tumblr.com/',
-  docLocation: document.location,
-  DOC: document.querySelector('html')
-};
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -294,12 +183,170 @@ var createCustomElement = function createCustomElement() {
 
 
 /***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+
+
+var postWrapper = document.querySelector('ul.posts');
+var tagWrapper = document.querySelector('ul.tags');
+var dataWrapper = document.querySelector('pre.data');
+var loadingClass = 'loading';
+var tags = [];
+var arrTags = [];
+var allPosts = [];
+var posts;
+var resultFinal;
+var getPosts = function getPosts() {
+  var limit = 20;
+  var options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  var retrieveMore = function retrieveMore(offset) {
+    var url = new URL("https://".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBaseURL).concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].apiBlog, "/posts?offset=").concat(offset));
+    url.searchParams.set('api_key', _global__WEBPACK_IMPORTED_MODULE_0__["global"].oAuthConsumerKey);
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(loadingClass);
+    fetch(url, options).then(function (response) {
+      return response.json();
+    }).then(function (response) {
+      if (response) {
+        var postLength = response.response.posts.length;
+        var totalPosts = response.response.total_posts;
+        posts = response.response.posts;
+        if (postWrapper) {
+          posts.forEach(function (item) {
+            allPosts.push(item);
+            var tag = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceSpaces"])(item.tags[0]);
+            var template = "<li class=\"el el-2\"><a href=".concat(tag, " class=\"post-trigger\">").concat(item.body, "</a></li>");
+            postWrapper.insertAdjacentHTML('beforeend', template);
+          });
+        }
+        if (dataWrapper) {
+          dataWrapper.textContent = JSON.stringify(posts[0], null, 4);
+          return;
+        }
+
+        /*
+        Lets keep pushing all of the tags to the tag array
+        */
+        posts.map(function (item) {
+          return item.tags.map(function (tag) {
+            return tags.push(tag.toLowerCase());
+          });
+        });
+
+        /* 
+        As long as our total no of posts is greater than our counter keep iterating over the posts
+        */
+        if (totalPosts >= offset && postLength !== 0) {
+          retrieveMore(offset + limit);
+        }
+        /* 
+        Once our counter is larger or the same size as
+        the total number of posts, 
+        lets output the array of unique tags. 
+        */
+        if (offset >= totalPosts) {
+          arrTags = _toConsumableArray(new Set(tags.sort()));
+          setAllPostsToObjects();
+          attachClickEvent();
+          if (tagWrapper) {
+            setTags();
+          }
+        }
+      }
+    })["catch"](function (error) {
+      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
+      console.error('Error:', error.message);
+    })["finally"](function () {
+      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
+    });
+  };
+  retrieveMore(0);
+};
+var setTags = function setTags() {
+  arrTags.forEach(function (item) {
+    var itemHREF = item.replaceAll(' ', '+');
+    var template = "<li><a href=".concat(_global__WEBPACK_IMPORTED_MODULE_0__["global"].blogURL, "/tagged/").concat(itemHREF, " target=\"_blank\">").concat(item, "</li>");
+    tagWrapper.innerHTML += template;
+  });
+};
+var setAllPostsToObjects = function setAllPostsToObjects() {
+  var newSets = arrTags.map(function (item) {
+    return allPosts.filter(function (postItem) {
+      return postItem.tags[0] === item;
+    });
+  });
+  resultFinal = arrTags.map(function (key, i) {
+    key = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceSpaces"])(key);
+    return {
+      name: key,
+      value: newSets[i]
+    };
+  });
+};
+var attachClickEvent = function attachClickEvent() {
+  var modal = document.querySelector('.modal__list');
+  document.addEventListener('click', function (event) {
+    event.preventDefault();
+    var current = event.target.closest('.post-trigger');
+    if (current) {
+      return resultFinal.forEach(function (item, index) {
+        var itemName = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceUnderscores"])(item.name);
+        var targetName = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceUnderscores"])(current.getAttribute('href'));
+        var setName = resultFinal[index].value;
+        if (itemName === targetName) {
+          console.log(resultFinal[index].name, setName);
+          setName.forEach(function (item) {
+            var template = "<li class=\"el el-3\">".concat(item.body, "</li>");
+            modal.insertAdjacentHTML('beforeend', template);
+          });
+        }
+      });
+    }
+  });
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "global", function() { return global; });
+var global = {
+  protocol: document.location.protocol,
+  apiBaseURL: 'api.tumblr.com/v2/blog/',
+  apiBlog: 'jessicaharbydotcom.tumblr.com',
+  oAuthConsumerKey: atob('MW5KZmtyMG9XZzBzTmxHS0ttNXB4NG43TVBETWFZb2x1R0NwbkZuRk1WejlJbHlIUFc='),
+  blogURL: 'https://jessicaharbydotcom.tumblr.com/',
+  docLocation: document.location,
+  DOC: document.querySelector('html')
+};
+
+
+/***/ }),
 /* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 
 var pageDirectory = function pageDirectory() {
   var dir = _global__WEBPACK_IMPORTED_MODULE_0__["global"].docLocation.pathname.split('/');
@@ -315,6 +362,67 @@ var pageDirectory = function pageDirectory() {
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (pageDirectory);
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addScrollLock", function() { return addScrollLock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeScrollLock", function() { return removeScrollLock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceSpaces", function() { return replaceSpaces; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceUnderscores", function() { return replaceUnderscores; });
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+
+var scrollLockClass = 'scroll-lock';
+var addScrollLock = function addScrollLock() {
+  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(scrollLockClass);
+};
+var removeScrollLock = function removeScrollLock() {
+  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(scrollLockClass);
+};
+var replaceSpaces = function replaceSpaces(elem) {
+  return elem.replace(/\s/g, '_');
+};
+var replaceUnderscores = function replaceUnderscores(elem) {
+  return elem.replace(/_/g, ' ');
+};
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modal", function() { return modal; });
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+
+var modal = function modal() {
+  var modalClass = 'modal';
+  var openClass = "".concat(modalClass, "__open");
+  var closeClass = "".concat(modalClass, "__close");
+  var modalElem;
+  document.addEventListener('click', function (event) {
+    modalElem = document.querySelector('.modal');
+    var current = event.target.closest('.post-trigger');
+    if (current && modalElem) {
+      modalElem.classList.add(openClass);
+      Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["addScrollLock"])();
+    }
+  });
+  document.addEventListener('click', function (event) {
+    var modalList = document.querySelector(".".concat(modalClass, "__list"));
+    var close = event.target.classList.contains(closeClass);
+    if (close && modalElem) {
+      modalElem.classList.remove(openClass);
+      modalList.replaceChildren();
+      Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["removeScrollLock"])();
+    }
+  });
+};
+
 
 /***/ })
 /******/ ]);
