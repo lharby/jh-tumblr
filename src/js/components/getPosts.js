@@ -107,6 +107,7 @@ const attachClickEvent = () => {
         event.preventDefault();
         const current = event.target.closest('.post-trigger');
         if (current) {
+            const parser = new DOMParser();
             return resultFinal.forEach((item, index) => {
                 const itemName = replaceUnderscores(item.name);
                 const targetName = replaceUnderscores(current.getAttribute('href'));
@@ -114,8 +115,13 @@ const attachClickEvent = () => {
                 if (itemName === targetName) {
                     console.log(resultFinal[index].name, setName);
                     setName.forEach((item) => {
-                        const template = `<li class="el el-3">${item.body}</li>`;
-                        modal.insertAdjacentHTML('beforeend', template);
+                        const doc = parser.parseFromString(item.body, 'text/html');
+                        const images = doc.querySelectorAll('img');
+                        images.forEach((imageItem) => {
+                            const thumbnail = imageItem.srcset.split(',')[0].split(' ')[0];
+                            const template = `<li><a href=""><img src=${thumbnail} /></a></li>`;
+                            thumbnail ? modal.insertAdjacentHTML('beforeend', template) : null;
+                        });
                     });
                 }
             });
@@ -124,3 +130,9 @@ const attachClickEvent = () => {
 };
 
 export { getPosts };
+
+// images.forEach(item => {
+//     const thumbnail = item.srcset.split(',')[0].split(' ')[0];
+//     const template = `<li><img src=${thumbnail} /></li>`;
+//     output.insertAdjacentHTML('beforeend', template);
+// });

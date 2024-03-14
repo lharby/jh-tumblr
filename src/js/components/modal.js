@@ -16,14 +16,24 @@ const modal = () => {
     });
 
     document.addEventListener('click', (event) => {
-        const modalList = document.querySelector(`.${modalClass}__list`);
         const close = event.target.classList.contains(closeClass);
         if (close && modalElem) {
-            modalElem.classList.remove(openClass);
-            modalList.replaceChildren();
-            removeScrollLock();
+            closeModal();
         }
     });
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    const closeModal = () => {
+        const modalList = document.querySelector(`.${modalClass}__list`);
+        modalElem.classList.remove(openClass);
+        modalList.replaceChildren();
+        removeScrollLock();
+    };
 };
 
 export { modal };

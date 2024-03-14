@@ -1,8 +1,6 @@
 {
     "extends": "eslint:recommended",
-    "plugins": [
-        "prettier"
-    ],
+    "plugins": ["prettier"],
     "env": {
         "jest": true,
         "browser": true,
@@ -22,7 +20,7 @@
         "grecaptcha": "readonly"
     },
     "rules": {
-        "prettier/prettier": ["error", {"singleQuote": true}],
+        "prettier/prettier": ["error", { "singleQuote": true }, { "endOfLine": "auto" }],
         "import/no-unresolved": 0,
         "import/no-extraneous-dependencies": 0,
         "global-require": 0,

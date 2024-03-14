@@ -1,29 +1,24 @@
 {
-  extends: [
-    "airbnb",
-    "prettier",
-    "prettier/react",
-    "plugin:mocha/recommended"
-  ],
-  plugins: ["react", "prettier", "mocha"],
-  "env": {
-    "jest": true,
-    "browser": true,
-    "node": true
-  },
-  "parserOptions": {
-      "allowImportExportEverywhere": true,
-      "sourceType": "module"
-  },
-  rules: {
-    "react/jsx-filename-extension": [0, {"extensions": null, "jsx": null}],
-    "prettier/prettier": ["error", {"singleQuote": true}],
-    "import/no-unresolved": 0,
-    "mocha/no-mocha-arrows": 0,
-    "react/forbid-prop-types": 0,
-    "import/no-extraneous-dependencies": 0,
-    "react/no-array-index-key": 0,
-    "global-require": 0,
-    "no-useless-escape": 0
-  }
+    "extends": ["airbnb", "prettier", "prettier/react", "plugin:mocha/recommended"],
+    "plugins": ["react", "prettier", "mocha"],
+    "env": {
+        "jest": true,
+        "browser": true,
+        "node": true
+    },
+    "parserOptions": {
+        "allowImportExportEverywhere": true,
+        "sourceType": "module"
+    },
+    "rules": {
+        "react/jsx-filename-extension": [0, { "extensions": null, "jsx": null }],
+        "prettier/prettier": ["error", { "singleQuote": true }, { "endOfLine": "auto" }],
+        "import/no-unresolved": 0,
+        "mocha/no-mocha-arrows": 0,
+        "react/forbid-prop-types": 0,
+        "import/no-extraneous-dependencies": 0,
+        "react/no-array-index-key": 0,
+        "global-require": 0,
+        "no-useless-escape": 0
+    }
 }

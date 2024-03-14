@@ -25,6 +25,18 @@
 
     &__list {
         display: flex;
+        position: absolute;
+        bottom: 1rem;
+        width: 100%;
+        justify-content: center;
+
+        li {
+            margin-right: 0.4rem;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
     }
 
     img {

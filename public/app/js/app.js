@@ -93,9 +93,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_main_scss__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _js_utils_customElement__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _js_components_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
-/* harmony import */ var _js_components_pageDirectory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
-/* harmony import */ var _js_components_getPosts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3);
+/* harmony import */ var _js_components_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+/* harmony import */ var _js_components_pageDirectory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
+/* harmony import */ var _js_components_getPosts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(7);
 
 
 
@@ -188,9 +188,119 @@ var createCustomElement = function createCustomElement() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modal", function() { return modal; });
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+
+var modal = function modal() {
+  var modalClass = 'modal';
+  var openClass = "".concat(modalClass, "__open");
+  var closeClass = "".concat(modalClass, "__close");
+  var modalElem;
+  document.addEventListener('click', function (event) {
+    modalElem = document.querySelector('.modal');
+    var current = event.target.closest('.post-trigger');
+    if (current && modalElem) {
+      modalElem.classList.add(openClass);
+      Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["addScrollLock"])();
+    }
+  });
+  document.addEventListener('click', function (event) {
+    var close = event.target.classList.contains(closeClass);
+    if (close && modalElem) {
+      closeModal();
+    }
+  });
+  window.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  });
+  var closeModal = function closeModal() {
+    var modalList = document.querySelector(".".concat(modalClass, "__list"));
+    modalElem.classList.remove(openClass);
+    modalList.replaceChildren();
+    Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["removeScrollLock"])();
+  };
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addScrollLock", function() { return addScrollLock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeScrollLock", function() { return removeScrollLock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceSpaces", function() { return replaceSpaces; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceUnderscores", function() { return replaceUnderscores; });
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+
+var scrollLockClass = 'scroll-lock';
+var addScrollLock = function addScrollLock() {
+  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(scrollLockClass);
+};
+var removeScrollLock = function removeScrollLock() {
+  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(scrollLockClass);
+};
+var replaceSpaces = function replaceSpaces(elem) {
+  return elem.replace(/\s/g, '_');
+};
+var replaceUnderscores = function replaceUnderscores(elem) {
+  return elem.replace(/_/g, ' ');
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "global", function() { return global; });
+var global = {
+  protocol: document.location.protocol,
+  apiBaseURL: 'api.tumblr.com/v2/blog/',
+  apiBlog: 'jessicaharbydotcom.tumblr.com',
+  oAuthConsumerKey: atob('MW5KZmtyMG9XZzBzTmxHS0ttNXB4NG43TVBETWFZb2x1R0NwbkZuRk1WejlJbHlIUFc='),
+  blogURL: 'https://jessicaharbydotcom.tumblr.com/',
+  docLocation: document.location,
+  DOC: document.querySelector('html')
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+
+var pageDirectory = function pageDirectory() {
+  var dir = _global__WEBPACK_IMPORTED_MODULE_0__["global"].docLocation.pathname.split('/');
+  var primaryDir = dir[1];
+  var secondaryDir = dir[2];
+  if (!primaryDir) {
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add('index');
+  } else if (secondaryDir) {
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(primaryDir);
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(secondaryDir);
+  } else if (primaryDir) {
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(primaryDir);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (pageDirectory);
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
-/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -305,6 +415,7 @@ var attachClickEvent = function attachClickEvent() {
     event.preventDefault();
     var current = event.target.closest('.post-trigger');
     if (current) {
+      var parser = new DOMParser();
       return resultFinal.forEach(function (item, index) {
         var itemName = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceUnderscores"])(item.name);
         var targetName = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceUnderscores"])(current.getAttribute('href'));
@@ -312,8 +423,13 @@ var attachClickEvent = function attachClickEvent() {
         if (itemName === targetName) {
           console.log(resultFinal[index].name, setName);
           setName.forEach(function (item) {
-            var template = "<li class=\"el el-3\">".concat(item.body, "</li>");
-            modal.insertAdjacentHTML('beforeend', template);
+            var doc = parser.parseFromString(item.body, 'text/html');
+            var images = doc.querySelectorAll('img');
+            images.forEach(function (imageItem) {
+              var thumbnail = imageItem.srcset.split(',')[0].split(' ')[0];
+              var template = "<li><a href=\"\"><img src=".concat(thumbnail, " /></a></li>");
+              thumbnail ? modal.insertAdjacentHTML('beforeend', template) : null;
+            });
           });
         }
       });
@@ -322,107 +438,11 @@ var attachClickEvent = function attachClickEvent() {
 };
 
 
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "global", function() { return global; });
-var global = {
-  protocol: document.location.protocol,
-  apiBaseURL: 'api.tumblr.com/v2/blog/',
-  apiBlog: 'jessicaharbydotcom.tumblr.com',
-  oAuthConsumerKey: atob('MW5KZmtyMG9XZzBzTmxHS0ttNXB4NG43TVBETWFZb2x1R0NwbkZuRk1WejlJbHlIUFc='),
-  blogURL: 'https://jessicaharbydotcom.tumblr.com/',
-  docLocation: document.location,
-  DOC: document.querySelector('html')
-};
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
-
-var pageDirectory = function pageDirectory() {
-  var dir = _global__WEBPACK_IMPORTED_MODULE_0__["global"].docLocation.pathname.split('/');
-  var primaryDir = dir[1];
-  var secondaryDir = dir[2];
-  if (!primaryDir) {
-    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add('index');
-  } else if (secondaryDir) {
-    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(primaryDir);
-    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(secondaryDir);
-  } else if (primaryDir) {
-    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(primaryDir);
-  }
-};
-/* harmony default export */ __webpack_exports__["default"] = (pageDirectory);
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addScrollLock", function() { return addScrollLock; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeScrollLock", function() { return removeScrollLock; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceSpaces", function() { return replaceSpaces; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceUnderscores", function() { return replaceUnderscores; });
-/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
-
-var scrollLockClass = 'scroll-lock';
-var addScrollLock = function addScrollLock() {
-  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(scrollLockClass);
-};
-var removeScrollLock = function removeScrollLock() {
-  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(scrollLockClass);
-};
-var replaceSpaces = function replaceSpaces(elem) {
-  return elem.replace(/\s/g, '_');
-};
-var replaceUnderscores = function replaceUnderscores(elem) {
-  return elem.replace(/_/g, ' ');
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "modal", function() { return modal; });
-/* harmony import */ var _utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
-
-var modal = function modal() {
-  var modalClass = 'modal';
-  var openClass = "".concat(modalClass, "__open");
-  var closeClass = "".concat(modalClass, "__close");
-  var modalElem;
-  document.addEventListener('click', function (event) {
-    modalElem = document.querySelector('.modal');
-    var current = event.target.closest('.post-trigger');
-    if (current && modalElem) {
-      modalElem.classList.add(openClass);
-      Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["addScrollLock"])();
-    }
-  });
-  document.addEventListener('click', function (event) {
-    var modalList = document.querySelector(".".concat(modalClass, "__list"));
-    var close = event.target.classList.contains(closeClass);
-    if (close && modalElem) {
-      modalElem.classList.remove(openClass);
-      modalList.replaceChildren();
-      Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["removeScrollLock"])();
-    }
-  });
-};
-
+// images.forEach(item => {
+//     const thumbnail = item.srcset.split(',')[0].split(' ')[0];
+//     const template = `<li><img src=${thumbnail} /></li>`;
+//     output.insertAdjacentHTML('beforeend', template);
+// });
 
 /***/ })
 /******/ ]);
