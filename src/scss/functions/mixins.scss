@@ -74,6 +74,26 @@ https://slackwise.org.uk
     }
 }
 
+@mixin rotate-anim($dur, $dir: cw) {
+    $from: 0deg !default;
+    $to: 360deg !default;
+
+    @if $dir == ccw {
+        $from: 360deg;
+        $to: 0deg;
+    }
+
+    @keyframes tspin-#{$dir} {
+        from {
+            transform: rotate($from);
+        }
+        to {
+            transform: rotate($to);
+        }
+    }
+    animation: tspin-#{$dir} #{$dur}s linear infinite;
+}
+
 @mixin keyframes($name) {
     @-webkit-keyframes #{$name} {
         @content;

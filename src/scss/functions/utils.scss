@@ -2,6 +2,16 @@
     @include hover(opacity, $animation__speed-default, $animation__ease-default);
     opacity: 0.7;
     pointer-events: none;
+
+    &:before {
+        @include rotate-anim('1');
+        @include hover(opacity, $animation__speed-default, $animation__ease-default);
+        font-family: $icon-font;
+        content: "\f29c";
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+    }
 }
 
 .scroll-lock {
