@@ -29,8 +29,10 @@ const modal = () => {
     });
 
     const closeModal = () => {
+        const modalContent = document.querySelector(`.${modalClass}__content`);
         const modalList = document.querySelector(`.${modalClass}__list`);
         modalElem.classList.remove(openClass);
+        modalContent.replaceChildren();
         modalList.replaceChildren();
         removeScrollLock();
     };

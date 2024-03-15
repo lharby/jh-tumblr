@@ -33,7 +33,7 @@ const getPosts = () => {
                         posts.forEach((item) => {
                             allPosts.push(item);
                             const tag = replaceSpaces(item.tags[0]);
-                            const template = `<li class="el el-2"><a href=${tag} class="post-trigger">${item.body}</a></li>`;
+                            const template = `<li class="el"><a href=${tag} class="post-trigger">${item.body}</a></li>`;
                             postWrapper.insertAdjacentHTML('beforeend', template);
                         });
                     }
@@ -63,6 +63,7 @@ const getPosts = () => {
                         arrTags = [...new Set(tags.sort())];
                         setAllPostsToObjects();
                         attachClickEvent();
+                        global.DOC.classList.remove(loadingClass);
                         if (tagWrapper) {
                             setTags();
                         }
@@ -74,7 +75,7 @@ const getPosts = () => {
                 console.error('Error:', error.message);
             })
             .finally(() => {
-                global.DOC.classList.remove(loadingClass);
+                console.log('all posts loaded');
             });
     };
     retrieveMore(0);
@@ -102,37 +103,46 @@ const setAllPostsToObjects = () => {
 };
 
 const attachClickEvent = () => {
-    const modal = document.querySelector('.modal__list');
+    const modalContent = document.querySelector('.modal__content');
+    const modalList = document.querySelector('.modal__list');
     document.addEventListener('click', (event) => {
-        event.preventDefault();
         const current = event.target.closest('.post-trigger');
         if (current) {
+            event.preventDefault();
             const parser = new DOMParser();
             return resultFinal.forEach((item, index) => {
                 const itemName = replaceUnderscores(item.name);
                 const targetName = replaceUnderscores(current.getAttribute('href'));
                 const setName = resultFinal[index].value;
                 if (itemName === targetName) {
-                    console.log(resultFinal[index].name, setName);
+                    const firstItem = setName[0].body;
                     setName.forEach((item) => {
                         const doc = parser.parseFromString(item.body, 'text/html');
                         const images = doc.querySelectorAll('img');
                         images.forEach((imageItem) => {
                             const thumbnail = imageItem.srcset.split(',')[0].split(' ')[0];
-                            const template = `<li><a href=""><img src=${thumbnail} /></a></li>`;
-                            thumbnail ? modal.insertAdjacentHTML('beforeend', template) : null;
+                            const template = `<li><a href="#${item.id}" class="thumbnail-trigger"><img src=${thumbnail} /></a></li>`;
+                            thumbnail ? modalList.insertAdjacentHTML('beforeend', template) : null;
                         });
                     });
+                    modalContent.insertAdjacentHTML('beforeend', firstItem);
                 }
+            });
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        const current = event.target.closest('.thumbnail-trigger');
+        if (current) {
+            event.preventDefault();
+            modalContent.replaceChildren();
+            const href = current.href.split('#')[1];
+            allPosts.forEach(() => {
+                const newPost = allPosts.filter((item) => item.id.toString() === href);
+                modalContent.innerHTML = newPost[0].body;
             });
         }
     });
 };
 
 export { getPosts };
-
-// images.forEach(item => {
-//     const thumbnail = item.srcset.split(',')[0].split(' ')[0];
-//     const template = `<li><img src=${thumbnail} /></li>`;
-//     output.insertAdjacentHTML('beforeend', template);
-// });

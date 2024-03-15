@@ -216,8 +216,10 @@ var modal = function modal() {
     }
   });
   var closeModal = function closeModal() {
+    var modalContent = document.querySelector(".".concat(modalClass, "__content"));
     var modalList = document.querySelector(".".concat(modalClass, "__list"));
     modalElem.classList.remove(openClass);
+    modalContent.replaceChildren();
     modalList.replaceChildren();
     Object(_utils_utils__WEBPACK_IMPORTED_MODULE_0__["removeScrollLock"])();
   };
@@ -341,7 +343,7 @@ var getPosts = function getPosts() {
           posts.forEach(function (item) {
             allPosts.push(item);
             var tag = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceSpaces"])(item.tags[0]);
-            var template = "<li class=\"el el-2\"><a href=".concat(tag, " class=\"post-trigger\">").concat(item.body, "</a></li>");
+            var template = "<li class=\"el\"><a href=".concat(tag, " class=\"post-trigger\">").concat(item.body, "</a></li>");
             postWrapper.insertAdjacentHTML('beforeend', template);
           });
         }
@@ -374,6 +376,7 @@ var getPosts = function getPosts() {
           arrTags = _toConsumableArray(new Set(tags.sort()));
           setAllPostsToObjects();
           attachClickEvent();
+          _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
           if (tagWrapper) {
             setTags();
           }
@@ -383,7 +386,7 @@ var getPosts = function getPosts() {
       _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
       console.error('Error:', error.message);
     })["finally"](function () {
-      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
+      console.log('all posts loaded');
     });
   };
   retrieveMore(0);
@@ -410,39 +413,49 @@ var setAllPostsToObjects = function setAllPostsToObjects() {
   });
 };
 var attachClickEvent = function attachClickEvent() {
-  var modal = document.querySelector('.modal__list');
+  var modalContent = document.querySelector('.modal__content');
+  var modalList = document.querySelector('.modal__list');
   document.addEventListener('click', function (event) {
-    event.preventDefault();
     var current = event.target.closest('.post-trigger');
     if (current) {
+      event.preventDefault();
       var parser = new DOMParser();
       return resultFinal.forEach(function (item, index) {
         var itemName = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceUnderscores"])(item.name);
         var targetName = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceUnderscores"])(current.getAttribute('href'));
         var setName = resultFinal[index].value;
         if (itemName === targetName) {
-          console.log(resultFinal[index].name, setName);
+          var firstItem = setName[0].body;
           setName.forEach(function (item) {
             var doc = parser.parseFromString(item.body, 'text/html');
             var images = doc.querySelectorAll('img');
             images.forEach(function (imageItem) {
               var thumbnail = imageItem.srcset.split(',')[0].split(' ')[0];
-              var template = "<li><a href=\"\"><img src=".concat(thumbnail, " /></a></li>");
-              thumbnail ? modal.insertAdjacentHTML('beforeend', template) : null;
+              var template = "<li><a href=\"#".concat(item.id, "\" class=\"thumbnail-trigger\"><img src=").concat(thumbnail, " /></a></li>");
+              thumbnail ? modalList.insertAdjacentHTML('beforeend', template) : null;
             });
           });
+          modalContent.insertAdjacentHTML('beforeend', firstItem);
         }
+      });
+    }
+  });
+  document.addEventListener('click', function (event) {
+    var current = event.target.closest('.thumbnail-trigger');
+    if (current) {
+      event.preventDefault();
+      modalContent.replaceChildren();
+      var href = current.href.split('#')[1];
+      allPosts.forEach(function () {
+        var newPost = allPosts.filter(function (item) {
+          return item.id.toString() === href;
+        });
+        modalContent.innerHTML = newPost[0].body;
       });
     }
   });
 };
 
-
-// images.forEach(item => {
-//     const thumbnail = item.srcset.split(',')[0].split(' ')[0];
-//     const template = `<li><img src=${thumbnail} /></li>`;
-//     output.insertAdjacentHTML('beforeend', template);
-// });
 
 /***/ })
 /******/ ]);

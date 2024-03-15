@@ -6,20 +6,18 @@
     bottom: 0;
     left: 0;
     overflow-y: auto;
-    background-color: transparentize($color: $colour__black, $amount: 0.1);
+    background-color: transparentize($color: $colour__white, $amount: 0.05);
 
     &__open {
-        display: block;
+        display: flex;
     }
 
     &__close {
         position: absolute;
-        top: 1rem;
         right: 1rem;
         border: none;
-        font-size: 2rem;
+        font-size: 3.5rem;
         background-color: transparent;
-        color: $colour__white;
         font-family: monospace;
     }
 
@@ -37,9 +35,26 @@
                 margin-right: 0;
             }
         }
+
+        img {
+            width: 100%;
+        }
     }
 
-    img {
-        width: 100%;
+    &__content {
+        display: flex;
+        flex-direction: column;
+        padding: 6rem;
+        height: calc(100% - 7rem);
+        overflow-y: auto;
+        margin: 0 auto;
+
+        @include tablet($tablet-size) {
+            padding: 0.5rem;
+        }
+
+        img {
+            width: 100%;
+        }
     }
 }

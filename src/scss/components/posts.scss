@@ -7,14 +7,21 @@ html.posts {
 
     .posts {
         li {
+            flex: 0 0 16.66667%;
+            max-width: 16.66667%;
             position: relative;
             background-color: $colour__grey--palest;
             height: 200px;
             overflow: hidden;
 
             @include tablet($tablet-size) {
-                height: unset;
-                overflow: unset;
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+
+            @include mobile(0, $mobile-size) {
+                flex: 0 0 50%;
+                max-width: 50%;
             }
 
             a {
@@ -27,10 +34,6 @@ html.posts {
                 position: absolute;
                 left: 0;
                 top: 0;
-
-                @include tablet($tablet-size) {
-                    position: unset;
-                }
             }
         }
     }

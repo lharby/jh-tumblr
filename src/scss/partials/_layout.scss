@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    @include hover(opacity, $animation__speed-default, $animation__ease-default);
+}
+
 body {
     font-family: monospace;
     font-size: 0.9rem;
