@@ -232,18 +232,78 @@ var modal = function modal() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isElement", function() { return isElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getElementScroll", function() { return getElementScroll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isScrollLocked", function() { return isScrollLocked; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addScrollLock", function() { return addScrollLock; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeScrollLock", function() { return removeScrollLock; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceSpaces", function() { return replaceSpaces; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replaceUnderscores", function() { return replaceUnderscores; });
 /* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 
+
+/**
+ * Find out whether or not the given argument is an element that would react somewhat normally to DOM-manipulations.
+ *
+ * @since 3.7.0
+ * @param {*} element - The element to check.
+ * @returns {boolean} `true` if the given argument is an element (or document, or window), and `false` otherwise.
+ */
+function isElement(element) {
+  return element instanceof Element || element instanceof Document || element instanceof Window;
+}
+
+/**
+ * Get the current scroll values of the given element (or window). Will return an object containing
+ * "left" and "top" properties, which are set to the scroll values, or false if no compatible element
+ * was given.
+ *
+ * @param {Element|Window} [element=window]
+ * @returns {{ left: number, top: number } | boolean}
+ */
+function getElementScroll() {
+  var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
+  if (isElement(element)) {
+    if (element instanceof Window) {
+      return {
+        left: element.pageXOffset || document.documentElement.scrollLeft,
+        top: element.pageYOffset || document.documentElement.scrollTop
+      };
+    } else {
+      return {
+        left: element.scrollX || element.scrollLeft,
+        top: element.scrollY || element.scrollTop
+      };
+    }
+  } else {
+    return false;
+  }
+}
 var scrollLockClass = 'scroll-lock';
+var scrollTop = 0;
+var isScrollLocked = false;
 var addScrollLock = function addScrollLock() {
-  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(scrollLockClass);
+  if (!isScrollLocked) {
+    // Get scroll position
+    var scrollPosition = getElementScroll();
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.style.marginTop = "".concat(-scrollPosition.top, "px");
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.add(scrollLockClass);
+    // Remember state
+    isScrollLocked = true;
+    scrollTop = scrollPosition.top;
+  }
 };
 var removeScrollLock = function removeScrollLock() {
-  _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(scrollLockClass);
+  if (isScrollLocked) {
+    var scrollPosition = getElementScroll();
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(scrollLockClass);
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.style.marginTop = '';
+    _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.style.marginLeft = '';
+    // Set the scroll position to what it was before
+    window.scrollTo(scrollPosition.left, scrollTop);
+    // Remember state
+    isScrollLocked = false;
+  }
 };
 var replaceSpaces = function replaceSpaces(elem) {
   return elem.replace(/\s/g, '_');
@@ -349,6 +409,7 @@ var getPosts = function getPosts() {
         }
         if (dataWrapper) {
           dataWrapper.textContent = JSON.stringify(posts[0], null, 4);
+          resetAjaxState();
           return;
         }
 
@@ -376,15 +437,15 @@ var getPosts = function getPosts() {
           arrTags = _toConsumableArray(new Set(tags.sort()));
           setAllPostsToObjects();
           attachClickEvent();
-          _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
+          resetAjaxState();
           if (tagWrapper) {
             setTags();
           }
         }
       }
     })["catch"](function (error) {
-      _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
       console.error('Error:', error.message);
+      resetAjaxState();
     })["finally"](function () {
       console.log('all posts loaded');
     });
@@ -454,6 +515,9 @@ var attachClickEvent = function attachClickEvent() {
       });
     }
   });
+};
+var resetAjaxState = function resetAjaxState() {
+  return _global__WEBPACK_IMPORTED_MODULE_0__["global"].DOC.classList.remove(loadingClass);
 };
 
 

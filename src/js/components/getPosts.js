@@ -40,6 +40,7 @@ const getPosts = () => {
 
                     if (dataWrapper) {
                         dataWrapper.textContent = JSON.stringify(posts[0], null, 4);
+                        resetAjaxState();
                         return;
                     }
 
@@ -63,16 +64,18 @@ const getPosts = () => {
                         arrTags = [...new Set(tags.sort())];
                         setAllPostsToObjects();
                         attachClickEvent();
-                        global.DOC.classList.remove(loadingClass);
+                        resetAjaxState();
                         if (tagWrapper) {
                             setTags();
                         }
                     }
+
+
                 }
             })
             .catch((error) => {
-                global.DOC.classList.remove(loadingClass);
                 console.error('Error:', error.message);
+                resetAjaxState();
             })
             .finally(() => {
                 console.log('all posts loaded');
@@ -144,5 +147,7 @@ const attachClickEvent = () => {
         }
     });
 };
+
+const resetAjaxState = () => global.DOC.classList.remove(loadingClass);
 
 export { getPosts };
