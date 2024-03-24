@@ -105,11 +105,7 @@ const setTags = () => {
 };
 
 const setAllPostsToObjects = () => {
-    const newSets = arrTags.map((item) => {
-        return allPosts.filter((postItem) => {
-            return postItem.tags[0] === item;
-        });
-    });
+    const newSets = arrTags.map((item) => allPosts.filter((postItem) => postItem.tags[0] === item));
 
     resultFinal = arrTags.map((key, i) => {
         key = replaceSpaces(key);
