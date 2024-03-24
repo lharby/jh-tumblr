@@ -35,6 +35,29 @@ html.posts {
                 left: 0;
                 top: 0;
             }
+
+            iframe {
+                pointer-events: none;
+            }
+
+            &.video-embed,
+            &.audio,
+            &.quote,
+            &.chat {
+                > a {
+                    display: flex;
+                    background: transparent;
+                    min-height: 200px;
+                    position: absolute;
+                    width: 100%;
+
+                    *,
+                    + *, 
+                    ~ * {
+                        pointer-events: none;
+                    }
+                }
+            }
         }
     }
 }

@@ -32,8 +32,22 @@ const getPosts = () => {
                     if (postWrapper) {
                         posts.forEach((item) => {
                             allPosts.push(item);
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(item.body, 'text/html');
+                            let type = 'text';
+                            if (doc.querySelectorAll('[data-provider]').length) {
+                                type = 'video';
+                            } else if (doc.querySelectorAll('.npf_link').length) {
+                                type = 'video video-embed';
+                            } else if (doc.querySelectorAll('audio').length) {
+                                type = 'audio';
+                            } else if (doc.querySelectorAll('.npf_quote').length) {
+                                type = 'quote';
+                            } else if (doc.querySelectorAll('.npf_chat').length) {
+                                type = 'chat';
+                            }
                             const tag = replaceSpaces(item.tags[0]);
-                            const template = `<li class="el"><a href=${tag} class="post-trigger">${item.body}</a></li>`;
+                            const template = `<li class="el ${type}"><a href=${tag} class="post-trigger">${item.body}</a></li>`;
                             postWrapper.insertAdjacentHTML('beforeend', template);
                         });
                     }
@@ -69,8 +83,6 @@ const getPosts = () => {
                             setTags();
                         }
                     }
-
-
                 }
             })
             .catch((error) => {
@@ -106,7 +118,7 @@ const setAllPostsToObjects = () => {
 };
 
 const attachClickEvent = () => {
-    const modalContent = document.querySelector('.modal__content');
+    const modalContent = document.querySelector('.modal__content--inner');
     const modalList = document.querySelector('.modal__list');
     document.addEventListener('click', (event) => {
         const current = event.target.closest('.post-trigger');

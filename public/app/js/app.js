@@ -216,7 +216,7 @@ var modal = function modal() {
     }
   });
   var closeModal = function closeModal() {
-    var modalContent = document.querySelector(".".concat(modalClass, "__content"));
+    var modalContent = document.querySelector(".".concat(modalClass, "__content--inner"));
     var modalList = document.querySelector(".".concat(modalClass, "__list"));
     modalElem.classList.remove(openClass);
     modalContent.replaceChildren();
@@ -324,6 +324,7 @@ var global = {
   protocol: document.location.protocol,
   apiBaseURL: 'api.tumblr.com/v2/blog/',
   apiBlog: 'jessicaharbydotcom.tumblr.com',
+  //apiBlog: 'jh-test.tumblr.com',
   oAuthConsumerKey: atob('MW5KZmtyMG9XZzBzTmxHS0ttNXB4NG43TVBETWFZb2x1R0NwbkZuRk1WejlJbHlIUFc='),
   blogURL: 'https://jessicaharbydotcom.tumblr.com/',
   docLocation: document.location,
@@ -402,8 +403,22 @@ var getPosts = function getPosts() {
         if (postWrapper) {
           posts.forEach(function (item) {
             allPosts.push(item);
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(item.body, 'text/html');
+            var type = 'text';
+            if (doc.querySelectorAll('[data-provider]').length) {
+              type = 'video';
+            } else if (doc.querySelectorAll('.npf_link').length) {
+              type = 'video video-embed';
+            } else if (doc.querySelectorAll('audio').length) {
+              type = 'audio';
+            } else if (doc.querySelectorAll('.npf_quote').length) {
+              type = 'quote';
+            } else if (doc.querySelectorAll('.npf_chat').length) {
+              type = 'chat';
+            }
             var tag = Object(_utils_utils__WEBPACK_IMPORTED_MODULE_1__["replaceSpaces"])(item.tags[0]);
-            var template = "<li class=\"el\"><a href=".concat(tag, " class=\"post-trigger\">").concat(item.body, "</a></li>");
+            var template = "<li class=\"el ".concat(type, "\"><a href=").concat(tag, " class=\"post-trigger\">").concat(item.body, "</a></li>");
             postWrapper.insertAdjacentHTML('beforeend', template);
           });
         }
@@ -474,7 +489,7 @@ var setAllPostsToObjects = function setAllPostsToObjects() {
   });
 };
 var attachClickEvent = function attachClickEvent() {
-  var modalContent = document.querySelector('.modal__content');
+  var modalContent = document.querySelector('.modal__content--inner');
   var modalList = document.querySelector('.modal__list');
   document.addEventListener('click', function (event) {
     var current = event.target.closest('.post-trigger');
