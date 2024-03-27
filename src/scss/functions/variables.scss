@@ -22,3 +22,8 @@ $animation__speed-slow: 1000ms;
 $animation__ease-default: ease-in;
 
 $icon-font: 'ionicons';
+
+// z-index
+$z-index__low: -1;
+$z-index__normal: 0;
+$z-index__high: 1;

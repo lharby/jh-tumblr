@@ -5,7 +5,7 @@
 }
 
 html {
-    @include hover(opacity, $animation__speed-default, $animation__ease-default);
+    @include hover(all, $animation__speed-default, $animation__ease-default);
 }
 
 body {

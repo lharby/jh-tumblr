@@ -1,0 +1,34 @@
+.index-posts {
+    video,
+    audio,
+    iframe {
+        width: 100%;
+    }
+
+    li {
+        @include hover(border, $animation__speed-fast, $animation__ease-default);
+        position: absolute;
+        background-color: $colour__grey--palest;
+        height: 200px;
+        width: 200px;
+        overflow: hidden;
+        border: 1px solid transparent;
+
+        @include tablet($tablet-size) {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        @include mobile(0, $mobile-size) {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        img {
+            background-color: $colour__grey--palest;
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}

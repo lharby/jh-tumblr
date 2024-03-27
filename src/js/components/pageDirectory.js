@@ -4,7 +4,7 @@ const pageDirectory = () => {
     const dir = global.docLocation.pathname.split('/');
     const primaryDir = dir[1];
     const secondaryDir = dir[2];
-    if (!primaryDir) {
+    if (!primaryDir || primaryDir === 'public') {
         global.DOC.classList.add('index');
     } else if (secondaryDir) {
         global.DOC.classList.add(primaryDir);

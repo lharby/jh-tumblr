@@ -1,14 +1,18 @@
 import { global } from '../global';
 import { replaceSpaces, replaceUnderscores } from '../utils/utils';
-const postWrapper = document.querySelector('ul.posts');
-const tagWrapper = document.querySelector('ul.tags');
-const dataWrapper = document.querySelector('pre.data');
+import { attachDraggable } from '../components/attachDraggable';
+
+const postWrapper = global.DOC.querySelector('ul.posts');
+const postIndexWrapper = global.DOC.querySelector('ul.index-posts');
+const tagWrapper = global.DOC.querySelector('ul.tags');
+const dataWrapper = global.DOC.querySelector('pre.data');
 const loadingClass = 'loading';
+let indexPage;
 let tags = [];
 let arrTags = [];
 let allPosts = [];
 let posts;
-let resultFinal;
+let resultFinal = [];
 
 const getPosts = () => {
     let limit = 20;
@@ -25,32 +29,33 @@ const getPosts = () => {
         fetch(url, options)
             .then((response) => response.json())
             .then((response) => {
+                indexPage = global.DOC.classList.contains('index');
                 if (response) {
                     const postLength = response.response.posts.length;
                     const totalPosts = response.response.total_posts;
                     posts = response.response.posts;
-                    if (postWrapper) {
-                        posts.forEach((item) => {
-                            allPosts.push(item);
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(item.body, 'text/html');
-                            let type = 'text';
-                            if (doc.querySelectorAll('[data-provider]').length) {
-                                type = 'video';
-                            } else if (doc.querySelectorAll('.npf_link').length) {
-                                type = 'video video-embed';
-                            } else if (doc.querySelectorAll('audio').length) {
-                                type = 'audio';
-                            } else if (doc.querySelectorAll('.npf_quote').length) {
-                                type = 'quote';
-                            } else if (doc.querySelectorAll('.npf_chat').length) {
-                                type = 'chat';
-                            }
+                    posts.forEach((item) => {
+                        allPosts.push(item);
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(item.body, 'text/html');
+                        let type = 'text';
+                        if (doc.querySelectorAll('[data-provider]').length) {
+                            type = 'video';
+                        } else if (doc.querySelectorAll('.npf_link').length) {
+                            type = 'video video-embed';
+                        } else if (doc.querySelectorAll('audio').length) {
+                            type = 'audio';
+                        } else if (doc.querySelectorAll('.npf_quote').length) {
+                            type = 'quote';
+                        } else if (doc.querySelectorAll('.npf_chat').length) {
+                            type = 'chat';
+                        }
+                        if (postWrapper) {
                             const tag = replaceSpaces(item.tags[0]);
                             const template = `<li class="el ${type}"><a href=${tag} class="post-trigger">${item.body}</a></li>`;
                             postWrapper.insertAdjacentHTML('beforeend', template);
-                        });
-                    }
+                        }
+                    });
 
                     if (dataWrapper) {
                         dataWrapper.textContent = JSON.stringify(posts[0], null, 4);
@@ -82,6 +87,9 @@ const getPosts = () => {
                         if (tagWrapper) {
                             setTags();
                         }
+                        if (indexPage) {
+                            indexPagePosts();
+                        }
                     }
                 }
             })
@@ -106,7 +114,6 @@ const setTags = () => {
 
 const setAllPostsToObjects = () => {
     const newSets = arrTags.map((item) => allPosts.filter((postItem) => postItem.tags[0] === item));
-
     resultFinal = arrTags.map((key, i) => {
         key = replaceSpaces(key);
         return { name: key, value: newSets[i] };
@@ -114,9 +121,9 @@ const setAllPostsToObjects = () => {
 };
 
 const attachClickEvent = () => {
-    const modalContent = document.querySelector('.modal__content--inner');
-    const modalList = document.querySelector('.modal__list');
-    document.addEventListener('click', (event) => {
+    const modalContent = global.DOC.querySelector('.modal__content--inner');
+    const modalList = global.DOC.querySelector('.modal__list');
+    global.DOC.addEventListener('click', (event) => {
         const current = event.target.closest('.post-trigger');
         if (current) {
             event.preventDefault();
@@ -142,7 +149,7 @@ const attachClickEvent = () => {
         }
     });
 
-    document.addEventListener('click', (event) => {
+    global.DOC.addEventListener('click', (event) => {
         const current = event.target.closest('.thumbnail-trigger');
         if (current) {
             event.preventDefault();
@@ -153,6 +160,21 @@ const attachClickEvent = () => {
                 modalContent.innerHTML = newPost[0].body;
             });
         }
+    });
+};
+
+const indexPagePosts = () => {
+    resultFinal.map((item) => {
+        let rndLeft = Math.round(Math.random() * 100);
+        let rndTop = Math.round(Math.random() * 300);
+        const template = `<li id=${item.name} style="left: ${rndLeft}px; top: ${rndTop}px">
+            <a href="#" class="post-trigger">
+                <p class="item-name">${item.name}<p>
+                <p>${item.value[0].body}</p>
+            </a>
+        </li>`;
+        postIndexWrapper.insertAdjacentHTML('beforeend', template);
+        attachDraggable();
     });
 };
 
